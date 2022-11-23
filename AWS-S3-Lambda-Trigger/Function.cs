@@ -20,6 +20,8 @@ public class Function
     public string VendorName = string.Empty;
     public string ReceiverName = string.Empty;
     public string OtherName = string.Empty;
+    public string connectionString = "server=sample-instance.c53wji5mnp4g.ap-south-1.rds.amazonaws.com;User Id=Admin;Password=Jz7XXc8iqCHjJTL;database=sample;Trusted_Connection=True;TrustServerCertificate=Yes;Integrated Security=false;";
+
     IAmazonS3 S3Client { get; set; }
 
     /// <summary>
@@ -172,8 +174,6 @@ public class Function
                                         FileName = file.Key
                                     };
 
-                                    var connectionString = "server=sample-instance.c53wji5mnp4g.ap-south-1.rds.amazonaws.com;User Id=Admin;Password=Jz7XXc8iqCHjJTL;database=sample;Trusted_Connection=True;TrustServerCertificate=Yes;Integrated Security=false;";
-
                                     using (var conn = new SqlConnection(connectionString))
                                     {
                                         context.Logger.LogInformation("Try to connect to RDS...");
@@ -212,8 +212,6 @@ public class Function
                                         CreatedAt = DateTime.Now,
                                         FileName = file.Key
                                     };
-
-                                    var connectionString = "server=sample-instance.c53wji5mnp4g.ap-south-1.rds.amazonaws.com;User Id=Admin;Password=Jz7XXc8iqCHjJTL;database=sample;Trusted_Connection=True;TrustServerCertificate=Yes;Integrated Security=false;";
 
                                     using (var conn = new SqlConnection(connectionString))
                                     {
