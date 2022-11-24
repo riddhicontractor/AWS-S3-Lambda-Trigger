@@ -164,23 +164,23 @@ public class Function
                                         }
                                     }
 
-                                    // add to db-InvoiceDetails start
-                                    InvoiceDetails invoiceDetails = new InvoiceDetails();
+                                // add to db-InvoiceDetails start
+
+                                    InvoiceDetails details = new InvoiceDetails();
+                                    details.InvoiceNumber = InvoiceNumber;
+                                    details.VendorName = VendorName;
+                                    details.FileName = file.Key;
                                     if (ReceiverName != "")
                                     {
-                                        invoiceDetails.InvoiceNumber = InvoiceNumber;
-                                        invoiceDetails.VendorName = VendorName;
-                                        invoiceDetails.ReceiverName = ReceiverName;
-                                        invoiceDetails.CreatedAt = DateTime.Now;
-                                        invoiceDetails.FileName = file.Key;
+                                        details.ReceiverName = ReceiverName;
+                                    }
+                                    else if(ReceiverName != null)
+                                    {
+                                        details.ReceiverName = OtherName;
                                     }
                                     else
                                     {
-                                        invoiceDetails.InvoiceNumber = InvoiceNumber;
-                                        invoiceDetails.VendorName = VendorName;
-                                        invoiceDetails.ReceiverName = OtherName;
-                                        invoiceDetails.CreatedAt = DateTime.Now;
-                                        invoiceDetails.FileName = file.Key;
+                                        details.ReceiverName = OtherName;
                                     }
                                     using (var conn = new SqlConnection(connectionString))
                                     {
@@ -190,7 +190,7 @@ public class Function
 
                                         context.Logger.LogInformation("Successfully connected to RDS!");
 
-                                        SqlCommand cmd = new("INSERT INTO InvoiceDetails (InvoiceNumber, VendorName, ReceiverName, CreatedAt, FileName) VALUES ('" + invoiceDetails.InvoiceNumber + "', '" + invoiceDetails.VendorName + "', '" + invoiceDetails.ReceiverName + "', '" + DateTime.Now + "', '" + invoiceDetails.FileName + "');", conn);
+                                        SqlCommand cmd = new("INSERT INTO InvoiceDetails (InvoiceNumber, VendorName, ReceiverName, CreatedAt, FileName) VALUES ('" + details.InvoiceNumber + "', '" + details.VendorName + "', '" + details.ReceiverName + "', '" + DateTime.Now + "', '" + details.FileName + "');", conn);
 
                                         cmd.ExecuteNonQuery();
 
@@ -217,7 +217,6 @@ public class Function
                                 //add to db-ErrorLog start
                                     ErrorLog log = new ErrorLog()
                                     {
-                                        CreatedAt = DateTime.Now,
                                         FileName = file.Key
                                     };
 
