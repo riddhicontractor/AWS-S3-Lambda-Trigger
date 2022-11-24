@@ -164,64 +164,41 @@ public class Function
                                         }
                                     }
 
-                                // add to db-InvoiceDetails start
-                                    if(ReceiverName != "")
+                                    // add to db-InvoiceDetails start
+                                    InvoiceDetails invoiceDetails = new InvoiceDetails();
+                                    if (ReceiverName != "")
                                     {
-                                        InvoiceDetails invoiceDetails = new InvoiceDetails()
-                                        {
-                                            InvoiceNumber = InvoiceNumber,
-                                            VendorName = VendorName,
-                                            ReceiverName = ReceiverName,
-                                            CreatedAt = DateTime.Now,
-                                            FileName = file.Key
-                                        };
-
-                                        using (var conn = new SqlConnection(connectionString))
-                                        {
-                                            context.Logger.LogInformation("Try to connect to RDS...");
-
-                                            conn.Open();
-
-                                            context.Logger.LogInformation("Successfully connected to RDS!");
-
-                                            SqlCommand cmd = new("INSERT INTO InvoiceDetails (InvoiceNumber, VendorName, ReceiverName, CreatedAt, FileName) VALUES ('" + invoiceDetails.InvoiceNumber + "', '" + invoiceDetails.VendorName + "', '" + invoiceDetails.ReceiverName + "', '" + invoiceDetails.CreatedAt + "', '" + invoiceDetails.FileName + "');", conn);
-
-                                            cmd.ExecuteNonQuery();
-
-                                            context.Logger.LogInformation("Extracted File details inserted in database successfully!");
-
-                                            conn.Close();
-                                        }
+                                        invoiceDetails.InvoiceNumber = InvoiceNumber;
+                                        invoiceDetails.VendorName = VendorName;
+                                        invoiceDetails.ReceiverName = ReceiverName;
+                                        invoiceDetails.CreatedAt = DateTime.Now;
+                                        invoiceDetails.FileName = file.Key;
                                     }
                                     else
                                     {
-                                        InvoiceDetails invoiceDetails = new InvoiceDetails()
-                                        {
-                                            InvoiceNumber = InvoiceNumber,
-                                            VendorName = VendorName,
-                                            ReceiverName = OtherName,
-                                            CreatedAt = DateTime.Now,
-                                            FileName = file.Key
-                                        };
-
-                                        using (var conn = new SqlConnection(connectionString))
-                                        {
-                                            context.Logger.LogInformation("Try to connect to RDS...");
-
-                                            conn.Open();
-
-                                            context.Logger.LogInformation("Successfully connected to RDS!");
-
-                                            SqlCommand cmd = new("INSERT INTO InvoiceDetails (InvoiceNumber, VendorName, ReceiverName, CreatedAt, FileName) VALUES ('" + invoiceDetails.InvoiceNumber + "', '" + invoiceDetails.VendorName + "', '" + invoiceDetails.ReceiverName + "', '" + invoiceDetails.CreatedAt + "', '" + invoiceDetails.FileName + "');", conn);
-
-                                            cmd.ExecuteNonQuery();
-
-                                            context.Logger.LogInformation("Extracted File details inserted in database successfully!");
-
-                                            conn.Close();
-                                        }
+                                        invoiceDetails.InvoiceNumber = InvoiceNumber;
+                                        invoiceDetails.VendorName = VendorName;
+                                        invoiceDetails.ReceiverName = OtherName;
+                                        invoiceDetails.CreatedAt = DateTime.Now;
+                                        invoiceDetails.FileName = file.Key;
                                     }
-                                //end
+                                    using (var conn = new SqlConnection(connectionString))
+                                    {
+                                        context.Logger.LogInformation("Try to connect to RDS...");
+
+                                        conn.Open();
+
+                                        context.Logger.LogInformation("Successfully connected to RDS!");
+
+                                        SqlCommand cmd = new("INSERT INTO InvoiceDetails (InvoiceNumber, VendorName, ReceiverName, CreatedAt, FileName) VALUES ('" + invoiceDetails.InvoiceNumber + "', '" + invoiceDetails.VendorName + "', '" + invoiceDetails.ReceiverName + "', '" + DateTime.Now + "', '" + invoiceDetails.FileName + "');", conn);
+
+                                        cmd.ExecuteNonQuery();
+
+                                        context.Logger.LogInformation("Extracted File details inserted in database successfully!");
+
+                                        conn.Close();
+                                    }
+                                    //end
 
                                     context.Logger.LogInformation($"{file.Key} - File has been extracted successfully!");
 
@@ -252,7 +229,7 @@ public class Function
 
                                         context.Logger.LogInformation("Successfully connected to RDS!");
 
-                                        SqlCommand cmd = new("INSERT INTO ErrorLog (CreatedAt, FileName) VALUES ('" + log.CreatedAt + "', '" + log.FileName + "');", conn);
+                                        SqlCommand cmd = new("INSERT INTO ErrorLog (CreatedAt, FileName) VALUES ('" + DateTime.Now + "', '" + log.FileName + "');", conn);
 
                                         cmd.ExecuteNonQuery();
 
