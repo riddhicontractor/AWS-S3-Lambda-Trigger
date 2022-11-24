@@ -169,7 +169,7 @@ public class Function
                                     {
                                         InvoiceNumber = InvoiceNumber,
                                         VendorName = VendorName,
-                                        ReceiverName = ReceiverName != "" ? ReceiverName : OtherName,
+                                        ReceiverName = ReceiverName != "" || ReceiverName != null ? ReceiverName : OtherName,
                                         CreatedAt = DateTime.Now,
                                         FileName = file.Key
                                     };
