@@ -74,7 +74,7 @@ public class Function
                 {
                     context.Logger.LogInformation("Start document detection job");
 
-                    //AWS Expense API
+                //AWS Expense API
 
                     var expenseRequest = await textractClient.StartExpenseAnalysisAsync(new StartExpenseAnalysisRequest
                     {
@@ -103,7 +103,7 @@ public class Function
 
                     GetExpenseAnalysisResponse getExpenseAnalysisResponse;
 
-                    // Poll till job is no longer in progress.
+                // Poll till job is no longer in progress.
                     do
                     {
                         Thread.Sleep(1000);
@@ -113,7 +113,7 @@ public class Function
 
                     context.Logger.LogInformation("Print out results if the job was successful.");
 
-                    // If the job was successful loop through the pages of results and print the detected text
+                // If the job was successful loop through the pages of results and print the detected text
                     if (getExpenseAnalysisResponse.JobStatus == JobStatus.SUCCEEDED)
                     {
                         do
@@ -165,30 +165,61 @@ public class Function
                                     }
 
                                 // add to db-InvoiceDetails start
-                                    InvoiceDetails invoiceDetails = new InvoiceDetails()
+                                    if(ReceiverName != null)
                                     {
-                                        InvoiceNumber = InvoiceNumber,
-                                        VendorName = VendorName,
-                                        ReceiverName = ReceiverName != "" || ReceiverName != null ? ReceiverName : OtherName,
-                                        CreatedAt = DateTime.Now,
-                                        FileName = file.Key
-                                    };
+                                        InvoiceDetails invoiceDetails = new InvoiceDetails()
+                                        {
+                                            InvoiceNumber = InvoiceNumber,
+                                            VendorName = VendorName,
+                                            ReceiverName = ReceiverName,
+                                            CreatedAt = DateTime.Now,
+                                            FileName = file.Key
+                                        };
 
-                                    using (var conn = new SqlConnection(connectionString))
+                                        using (var conn = new SqlConnection(connectionString))
+                                        {
+                                            context.Logger.LogInformation("Try to connect to RDS...");
+
+                                            conn.Open();
+
+                                            context.Logger.LogInformation("Successfully connected to RDS!");
+
+                                            SqlCommand cmd = new("INSERT INTO InvoiceDetails (InvoiceNumber, VendorName, ReceiverName, CreatedAt, FileName) VALUES ('" + invoiceDetails.InvoiceNumber + "', '" + invoiceDetails.VendorName + "', '" + invoiceDetails.ReceiverName + "', '" + invoiceDetails.CreatedAt + "', '" + invoiceDetails.FileName + "');", conn);
+
+                                            cmd.ExecuteNonQuery();
+
+                                            context.Logger.LogInformation("Extracted File details inserted in database successfully!");
+
+                                            conn.Close();
+                                        }
+                                    }
+                                    else
                                     {
-                                        context.Logger.LogInformation("Try to connect to RDS...");
+                                        InvoiceDetails invoiceDetails = new InvoiceDetails()
+                                        {
+                                            InvoiceNumber = InvoiceNumber,
+                                            VendorName = VendorName,
+                                            ReceiverName = OtherName,
+                                            CreatedAt = DateTime.Now,
+                                            FileName = file.Key
+                                        };
 
-                                        conn.Open();
+                                        using (var conn = new SqlConnection(connectionString))
+                                        {
+                                            context.Logger.LogInformation("Try to connect to RDS...");
 
-                                        context.Logger.LogInformation("Successfully connected to RDS!");
+                                            conn.Open();
 
-                                        SqlCommand cmd = new("INSERT INTO InvoiceDetails (InvoiceNumber, VendorName, ReceiverName, CreatedAt, FileName) VALUES ('" + invoiceDetails.InvoiceNumber + "', '" + invoiceDetails.VendorName + "', '" + invoiceDetails.ReceiverName + "', '" + invoiceDetails.CreatedAt + "', '" + invoiceDetails.FileName + "');", conn);
+                                            context.Logger.LogInformation("Successfully connected to RDS!");
 
-                                        cmd.ExecuteNonQuery();
+                                            SqlCommand cmd = new("INSERT INTO InvoiceDetails (InvoiceNumber, VendorName, ReceiverName, CreatedAt, FileName) VALUES ('" + invoiceDetails.InvoiceNumber + "', '" + invoiceDetails.VendorName + "', '" + invoiceDetails.ReceiverName + "', '" + invoiceDetails.CreatedAt + "', '" + invoiceDetails.FileName + "');", conn);
 
-                                        context.Logger.LogInformation("Extracted File details inserted in database successfully!");
+                                            cmd.ExecuteNonQuery();
 
-                                        conn.Close();
+                                            context.Logger.LogInformation("Extracted File details inserted in database successfully!");
+
+                                            conn.Close();
+                                        }
                                     }
                                 //end
 
