@@ -165,7 +165,7 @@ public class Function
                                     }
 
                                 // add to db-InvoiceDetails start
-                                    if(ReceiverName != null)
+                                    if(ReceiverName != "")
                                     {
                                         InvoiceDetails invoiceDetails = new InvoiceDetails()
                                         {
