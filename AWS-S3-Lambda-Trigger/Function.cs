@@ -198,7 +198,7 @@ public class Function
 
                                         conn.Close();
                                     }
-                                    //end
+                                //end
 
                                     context.Logger.LogInformation($"{file.Key} - File has been extracted successfully!");
 
