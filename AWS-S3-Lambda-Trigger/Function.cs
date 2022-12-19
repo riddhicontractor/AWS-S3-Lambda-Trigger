@@ -111,7 +111,7 @@ public class Function
 
                     } while (getExpenseAnalysisResponse.JobStatus == JobStatus.IN_PROGRESS);
 
-                    context.Logger.LogInformation("Print out results if the job was successful.");
+                    context.Logger.LogInformation("Print out results if the job was successful!");
 
                 // If the job was successful loop through the pages of results and print the detected text
                     if (getExpenseAnalysisResponse.JobStatus == JobStatus.SUCCEEDED)
@@ -226,7 +226,7 @@ public class Function
 
                                         conn.Open();
 
-                                        context.Logger.LogInformation("Successfully connected to RDS!");
+                                        context.Logger.LogInformation("Successfully connected to RDS.");
 
                                         SqlCommand cmd = new("INSERT INTO ErrorLog (CreatedAt, FileName) VALUES ('" + DateTime.Now + "', '" + log.FileName + "');", conn);
 
