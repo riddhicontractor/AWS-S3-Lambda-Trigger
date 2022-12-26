@@ -164,7 +164,7 @@ public class Function
                                         }
                                     }
 
-                                // add to db-InvoiceDetails start
+                                    // add to db-InvoiceDetails start
 
                                     InvoiceDetails details = new InvoiceDetails();
                                     details.InvoiceNumber = InvoiceNumber;
@@ -174,7 +174,7 @@ public class Function
                                     {
                                         details.ReceiverName = ReceiverName;
                                     }
-                                    else if(ReceiverName != null)
+                                    else if (ReceiverName != null)
                                     {
                                         details.ReceiverName = OtherName;
                                     }
@@ -198,7 +198,7 @@ public class Function
 
                                         conn.Close();
                                     }
-                                //end
+                                    //end
 
                                     context.Logger.LogInformation($"{file.Key} - File has been extracted successfully!");
 
@@ -214,7 +214,7 @@ public class Function
 
                                 else
                                 {
-                                //add to db-ErrorLog start
+                                    //add to db-ErrorLog start
                                     ErrorLog log = new ErrorLog()
                                     {
                                         FileName = file.Key
@@ -236,7 +236,7 @@ public class Function
 
                                         conn.Close();
                                     }
-                                 //end
+                                    //end
 
                                     context.Logger.LogInformation($"{file.Key} - File has no summary fileds to extract. Please upload a valid Invoice or Reciept!");
                                 }
